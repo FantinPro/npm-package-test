@@ -44,6 +44,7 @@ jobs:
             echo "MAJOR AND MINOR ARE SAME"
           else
             echo "MAJOR AND MINOR ARE NOT SAME"
+            exit 1
           fi
 
           

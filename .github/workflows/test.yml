@@ -28,8 +28,6 @@ jobs:
           content="${content//$'\r'/'%0D'}"
           # end of optional handling for multi line json
           echo "::set-output name=packageJson::$content"
-      - run: |
-          echo "${{fromJson(steps.read_package_json_version.outputs.packageJson).version}}"
 
       - name: Bump version and push tag
         id: tag_version

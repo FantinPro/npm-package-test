@@ -11,7 +11,7 @@ jobs:
         with:
           fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
 
-      # I use ${version:1} to remove first caracter from version, because it's a "v" and I don't want it 
+      # I use ${version:1} to remove first caracter from version, because it's a "v" and I don't want it.
       - name: Get greatest tag
         id: get_greatest_tag
         run: |

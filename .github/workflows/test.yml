@@ -11,7 +11,7 @@ jobs:
         with:
           fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
 
-      # I use ${version:1} to remove first caracter from version, because it's a "v" and I don't want it.
+      # I use ${version:1} to remove first caracter from version, because it's a "v" and I don't want it 
       - name: Get greatest tag
         id: get_greatest_tag
         run: |
@@ -29,13 +29,12 @@ jobs:
           content="${content//$'\n'/'%0A'}"
           content="${content//$'\r'/'%0D'}"
           # end of optional handling for multi line json
-          version="${{fromJson(steps.read_package_json_version.outputs.packageJson).version}}"
-          echo "::set-output name=packageJson::$version"
-
+          echo "::set-output name=packageJson::$content"
+      
       - name: Compare versions
         id: compare_versions
         run: |
-          if [ ${{steps.read_package_json_version.outputs.packageJson}} == ${{steps.get_greatest_tag.outputs.version}} ]; then
+          if [ ${{fromJson(steps.read_package_json_version.outputs.packageJson).version}} == ${{steps.get_greatest_tag.outputs.version}} ]; then
             echo "same version"
           else
             echo "not same version"

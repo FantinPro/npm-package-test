@@ -37,7 +37,7 @@ jobs:
           versionSplittedByDot[2]=0
           nextVersion="${versionSplittedByDot[0]}.${versionSplittedByDot[1]}.${versionSplittedByDot[2]}"
           echo "Next version: $nextVersion"
-          echo "::set-output name=nextVersion::$nextVersion"
+          echo "::set-output name=nextVersion::${nextVersion:1}"
 
       - name: Bump version and push tag
         id: tag_version

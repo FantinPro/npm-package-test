@@ -33,12 +33,15 @@ jobs:
         id: compare_versions
         run: |
           packageJsonVersion=${{fromJson(steps.read_package_json_version.outputs.packageJson).version}}
+          greatestTagVersion=${{steps.read_branch_name.outputs.version}}
+
+          echo "packageJsonVersion: $packageJsonVersion"
+          echo "greatestTagVersion: $greatestTagVersion"
+
+          branchVersion=(${greatestTagVersion//./ })
           packageJsonVersionSplittedByDot=(${packageJsonVersion//./ })
 
-          greatestTagVersion=${{steps.read_branch_name.outputs.version}}
-          greatestTagVersionSplittedByDot=(${greatestTagVersion//./ })
-
-          if [ "${packageJsonVersionSplittedByDot[0]}" == "${greatestTagVersionSplittedByDot[0]}" ] && [ "${packageJsonVersionSplittedByDot[1]}" == "${greatestTagVersionSplittedByDot[1]}" ]; then
+          if [ "${packageJsonVersionSplittedByDot[0]}" == "${branchVersion[0]}" ] && [ "${packageJsonVersionSplittedByDot[1]}" == "${branchVersion[1]}" ]; then
             echo "MAJOR AND MINOR ARE SAME :) !"
           else
             echo "MAJOR AND MINOR ARE NOT SAME :( !"

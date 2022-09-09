@@ -36,10 +36,12 @@ jobs:
         id: compare_versions
         run: |
           packageJsonVersion=${{fromJson(steps.read_package_json_version.outputs.packageJson).version}}
-          packageJsonVersionSplittedByDot=(${packageJsonVersion//./ })
-
           greatestTagVersion=${{steps.get_greatest_tag.outputs.version}}
 
+          echo "packageJsonVersion: $packageJsonVersion"
+          echo "greatestTagVersion: $greatestTagVersion"
+          
+          packageJsonVersionSplittedByDot=(${packageJsonVersion//./ })
           greatestTagVersionSplittedByDot=(${greatestTagVersion//./ })
 
           if [ -n "$greatestTagVersion" ]; then

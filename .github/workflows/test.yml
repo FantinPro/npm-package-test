@@ -11,13 +11,6 @@ jobs:
         with:
           fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
 
-      - name: 'Get Previous tag'
-        id: previoustag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
-      
-      - run: |
-          echo "Previous tag: ${{ steps.previoustag.outputs.tag }}"
-      
       - name: Read package json version
         id: read_package_json_version
         run: |

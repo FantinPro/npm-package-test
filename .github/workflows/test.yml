@@ -11,9 +11,13 @@ jobs:
         with:
           fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
 
-      - run: |
+      # I use ${version:1} to remove first caracter from version, because it's a "v" and I don't want it
+      - name: Get greatest tag
+        run: |
           git fetch --tags
-          echo $(git tag | tail -1)
+          version=$(git tag | tail -1)
+          echo "Greatest tag: $version"
+          echo "::set-output name=version::${version:1}"
       
       - name: Read package json version
         id: read_package_json_version
@@ -25,6 +29,19 @@ jobs:
           content="${content//$'\r'/'%0D'}"
           # end of optional handling for multi line json
           echo "::set-output name=packageJson::$content"
+
+      - name: Compare tag version and package json
+        id: compare_tag_version_and_package_json
+        run: |
+          packageJsonVersion=$(echo "${{ steps.read_package_json_version.outputs.packageJson }}" | jq -r '.version')
+          echo "Package json version: $packageJsonVersion"
+          if [ $packageJsonVersion == ${{ steps.create-tag.outputs.version }} ]; then
+            echo "Versions are the same"
+            echo "::set-output name=version::${{ steps.create-tag.outputs.version }}"
+          else
+            echo "Versions are different"
+            echo "::set-output name=version::${{ steps.create-tag.outputs.version }}.1"
+          fi
 
       - name: Bump version and push tag
         id: tag_version

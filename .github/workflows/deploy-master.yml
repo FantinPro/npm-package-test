@@ -19,7 +19,9 @@ jobs:
           git fetch --tags
           version=$(git tag | tail -1)
           echo "Greatest tag: $version"
-          echo "::set-output name=version::${version:1}"
+          versionWithoutV=${version:1}
+          echo "Greatest tag without v: $versionWithoutV"
+          echo "::set-output name=version::$versionWithoutV"
       
       - name: Read package json version
         id: read_package_json_version

@@ -1,0 +1,54 @@
+name: Create release from master
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps: 
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
+
+      - name: Get greatest tag
+        id: get_greatest_tag
+        run: |
+          git fetch --tags
+          version=$(git tag | tail -1)
+          echo "Greatest tag: $version"
+          echo "::set-output name=version::$version"
+
+      - name: Create branch
+        uses: peterjgrainger/action-create-branch@v2.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+        with:
+          branch: 'release_${{ steps.get_greatest_tag.outputs.version }}'
+          sha: '${{ github.event.pull_request.head.sha }}'
+
+      - name: Compute Next Minor Version
+        id: compute_next_version
+        run: |
+          version=${{ steps.get_greatest_tag.outputs.version }}
+          versionSplittedByDot=(${version//./ })
+          versionSplittedByDot[1]=$((versionSplittedByDot[1] + 1))
+          versionSplittedByDot[2]=0
+          nextVersion="${versionSplittedByDot[0]}.${versionSplittedByDot[1]}.${versionSplittedByDot[2]}"
+          echo "Next version: $nextVersion"
+          echo "::set-output name=nextVersion::$nextVersion"
+
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          custom_tag: "${{ steps.compute_next_version.outputs.nextVersion }}"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      
+
+
+      
+
+      

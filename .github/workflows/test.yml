@@ -1,4 +1,4 @@
-name: create branch
+name: test
 
 on:
   workflow_dispatch:
@@ -30,9 +30,14 @@ jobs:
           branch: 'release_${{ steps.tag_version.outputs.new_tag }}'
           sha: '${{ github.event.pull_request.head.sha }}'
 
-      - name: Read package.json
-        uses: dutscher/read-package-json-endpoint-actions@v1.33.7
-        id: package-json-endpoint
-
-      - name: Show version number
-        run: echo "${{ steps.package-json-endpoint.outputs.endpoint }}"
+      - id: set_var
+        run: |
+          content=`cat ./path/to/package.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+      - run: |
+          echo "${{fromJson(steps.set_var.outputs.packageJson).version}}"

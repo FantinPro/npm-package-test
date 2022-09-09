@@ -39,15 +39,17 @@ jobs:
           packageJsonVersionSplittedByDot=(${packageJsonVersion//./ })
 
           greatestTagVersion=${{steps.get_greatest_tag.outputs.version}}
+
           greatestTagVersionSplittedByDot=(${greatestTagVersion//./ })
 
-          if [ "${packageJsonVersionSplittedByDot[0]}" == "${greatestTagVersionSplittedByDot[0]}" ] && [ "${packageJsonVersionSplittedByDot[1]}" == "${greatestTagVersionSplittedByDot[1]}" ]; then
-            echo "MAJOR AND MINOR ARE SAME"
-          else
-            echo "MAJOR AND MINOR ARE NOT SAME"
-            exit 1
+          if [ -n "$greatestTagVersion" ]; then
+            if [ "${packageJsonVersionSplittedByDot[0]}" == "${greatestTagVersionSplittedByDot[0]}" ] && [ "${packageJsonVersionSplittedByDot[1]}" == "${greatestTagVersionSplittedByDot[1]}" ]; then
+              echo "MAJOR AND MINOR ARE SAME"
+            else
+              echo "MAJOR AND MINOR ARE NOT SAME"
+              exit 1
+            fi
           fi
-
           
       - name: Bump version and push tag
         id: tag_version

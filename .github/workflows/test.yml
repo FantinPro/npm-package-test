@@ -34,12 +34,9 @@ jobs:
       - name: Compare versions
         id: compare_versions
         run: |
-          if [ ${{fromJson(steps.read_package_json_version.outputs.packageJson).version}} == ${{steps.get_greatest_tag.outputs.version}} ]; then
-            echo "same version"
-          else
-            echo "not same version"
-          fi
-
+          packageJsonVersionSplittedByDot=(${${{fromJson(steps.read_package_json_version.outputs.packageJson).version}}//./ })
+          echo ${packageJsonVersionSplittedByDot[1]}
+          
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.0

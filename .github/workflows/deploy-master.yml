@@ -38,8 +38,8 @@ jobs:
           packageJsonVersion=${{fromJson(steps.read_package_json_version.outputs.packageJson).version}}
           greatestTagVersion=${{steps.get_greatest_tag.outputs.version}}
 
-          echo "packageJsonVersion: $packageJsonVersion"
-          echo "greatestTagVersion: $greatestTagVersion"
+          echo "Package Json Version: $packageJsonVersion"
+          echo "Greatest Tag Version: $greatestTagVersion"
           
           packageJsonVersionSplittedByDot=(${packageJsonVersion//./ })
           greatestTagVersionSplittedByDot=(${greatestTagVersion//./ })

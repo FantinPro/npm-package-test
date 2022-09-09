@@ -33,12 +33,12 @@ jobs:
         id: compare_versions
         run: |
           packageJsonVersion=${{fromJson(steps.read_package_json_version.outputs.packageJson).version}}
-          greatestTagVersion=${{steps.read_branch_name.outputs.version}}
+          branchVersion=${{steps.read_branch_name.outputs.version}}
 
-          echo "packageJsonVersion: $packageJsonVersion"
-          echo "greatestTagVersion: $greatestTagVersion"
+          echo "Package Json Version: $packageJsonVersion"
+          echo "Branch Version: $branchVersion"
 
-          branchVersion=(${greatestTagVersion//./ })
+          branchVersion=(${branchVersion//./ })
           packageJsonVersionSplittedByDot=(${packageJsonVersion//./ })
 
           if [ "${packageJsonVersionSplittedByDot[0]}" == "${branchVersion[0]}" ] && [ "${packageJsonVersionSplittedByDot[1]}" == "${branchVersion[1]}" ]; then

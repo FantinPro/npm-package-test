@@ -34,8 +34,11 @@ jobs:
       - name: Compare versions
         id: compare_versions
         run: |
-          packageJsonVersionSplittedByDot=${{fromJson(steps.read_package_json_version.outputs.packageJson).version}}
-          echo packageJsonVersionSplittedByDot
+          packageJsonVersion=${{fromJson(steps.read_package_json_version.outputs.packageJson).version}}
+          
+          packageJsonVersionSplittedByDot=(${packageJsonVersion//./ })
+
+          echo ${packageJsonVersionSplittedByDot[0]}
           
       - name: Bump version and push tag
         id: tag_version
